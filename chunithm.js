@@ -441,6 +441,13 @@ Array.prototype.copy = function () {
     return [].concat(this);
 }
 
+/* Compute average of an number array. */
+Array.prototype.average = function () {
+    var sum = 0;
+    for (var i = 0; i < this.length; i++) sum += this[i];
+    return sum / (this.length || 1);
+}
+
 /* ---- LOGIC */
 
 var data = {
@@ -514,6 +521,14 @@ function push_playlog_to_recent_candidates (playlog) {
         if (length < 30) return; /* 判断できない (RC枠が確定できない) */
         data.recent_candidates.shift();
     }
+}
+
+function compute_rate (data) {
+    var best_list   = Object.values(data.best_scores).sort(comp_rate).slice(0, 30);
+    var recent_list = data.recent_candidates.copy().sort(comp_rate).slice(0, 10);
+    var best   = best_list.map(function (x) { return x.rate; }).average();
+    var recent = recent_list.map(function (x) { return x.rate; }).average();
+    return { best: best, recent: recent, total: (best * 3 + recent) / 4 };
 }
 
 /* ---- SCRAPING */
