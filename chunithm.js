@@ -565,7 +565,11 @@ function attach_view (el) {
             data:                    data,
             best_list_order:         comp_rate,
             recent_candidates_order: comp_rate,
-            last_rate:               null,
+            last_rate:               { best: 0, recent: 0, total: 0 },
+        },
+        created: function () {
+            /* this.load_data();*/
+            /* this.last_rate = this.rate;*/
         },
         computed: {
             rate: function () {
@@ -586,6 +590,7 @@ function attach_view (el) {
             load_data: function () {
                 var data_str = localStorage.getItem("cra_star_data");
                 if (data_str) {
+                    /* TODO: Object.assign でアサインしても中身を observe してくれない */
                     Object.assign(this.data, JSON.parse(data_str));
                 }
             },
@@ -601,6 +606,7 @@ function attach_view (el) {
                     alert("PlayLog か MusicGenre を開いてください");
                     throw Error();
                 }
+                /* this.save_data();*/
             }
         }
     });
