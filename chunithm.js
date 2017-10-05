@@ -517,14 +517,6 @@ function push_playlog_to_recent_candidates (playlog) {
     }
 }
 
-function compute_rate (data) {
-    var best_list   = Object.values(data.best_scores).sort(comp_rate).slice(0, 30);
-    var recent_list = data.recent_candidates.copy().sort(comp_rate).slice(0, 10);
-    var best   = best_list.map(function (x) { return x.rate; }).average();
-    var recent = recent_list.map(function (x) { return x.rate; }).average();
-    return { best: best, recent: recent, total: (best * 3 + recent) / 4 };
-}
-
 /* ---- SCRAPING */
 
 function scrape_playlog_page () {
@@ -577,7 +569,11 @@ function attach_view (el) {
         },
         computed: {
             rate: function () {
-                compute_rate(this.data);
+                var best_list   = Object.values(this.data.best_scores).sort(comp_rate).slice(0, 30);
+                var recent_list = this.data.recent_candidates.copy().sort(comp_rate).slice(0, 10);
+                var best   = best_list.map(function (x) { return x.rate; }).average();
+                var recent = recent_list.map(function (x) { return x.rate; }).average();
+                return { best: best, recent: recent, total: (best * 3 + recent) / 4 };
             },
             ordered_best_list: function () {
                 return Object.values(this.data.best_scores).sort(this.best_list_order);
