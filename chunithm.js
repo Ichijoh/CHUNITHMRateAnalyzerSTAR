@@ -562,4 +562,52 @@ function scrape_musicgenre_page () {
     }
 }
 
+/* ---- VIEW MODEL */
+
+var vm;
+
+function attach_view (el) {
+    vm = new Vue({
+        el: el,
+        data: {
+            data:                    data,
+            best_list_order:         comp_rate,
+            recent_candidates_order: comp_rate,
+            last_rate:               null,
+        },
+        computed: {
+            rate: function () {
+                compute_rate(this.data);
+            },
+            ordered_best_list: function () {
+                return Object.values(this.data.best_scores).sort(this.best_list_order);
+            },
+            ordered_recent_candidates: function () {
+                return this.data.recent_candidates.copy().sort(this.recent_candidates_order);
+            }
+        },
+        methods: {
+            load_data: function () {
+                var data_str = localStorage.getItem("cra_star_data");
+                if (data_str) {
+                    Object.assign(this.data, JSON.parse(data_str));
+                }
+            },
+            save_data: function () {
+                localStorage.setItem("cra_star_data", JSON.stringify(this.data));
+            },
+            run_scraper: function () {
+                if (location.href.match(/Playlog\.html/))
+                    scrape_playlog_page();
+                else if (location.href.match(/MusicGenre\.html/))
+                    scrape_musicgenre_page();
+                else {
+                    alert("PlayLog か MusicGenre を開いてください");
+                    throw Error();
+                }
+            }
+        }
+    });
+}
+
 /* ---- VIEW */
