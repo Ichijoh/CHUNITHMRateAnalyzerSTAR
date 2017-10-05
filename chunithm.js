@@ -456,12 +456,6 @@ var data = {
     last_play_date: undefined,
 };
 
-var last_data = JSON.parse(localStorage.getItem("crastar_data")) || {
-    best_scores:       {},
-    recent_candidates: [],
-    last_play_date: undefined
-};
-
 function playlog (name, level, score, play_date /* optional */) {
     var chart      = CHART_BY_NAME[name];
     var difficulty = (chart && chart.difficulty[level]) || 0;
